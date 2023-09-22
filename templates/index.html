@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Application</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(45deg, #FFC371, #C7ECEE);
+            background-size: 400% 400%;
+            animation: gradient 10s ease infinite;
+            margin: 0;
+            padding: 0;
+        }
+
+        @keyframes gradient {
+            0%, 100% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #007bff;
+        }
+
+        fieldset {
+            border: 1px solid #ccc;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+
+        legend {
+            font-weight: bold;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        /* 改进按钮的样式 */
+        .btn {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+
+        .btn i {
+            margin-right: 5px;
+        }
+    </style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+<script>
+    // 连接到Socket.IO服务器
+    var socket = io.connect('http://10.2.172.155:8080/results');
+
+
+    // 监听服务器发送的消息事件
+    socket.on('update_result1', function(data) {
+        // 更新转换结果的显示
+        document.getElementById('result1').style.display = 'block';
+        document.getElementById('result1').innerHTML = '<h2>转换结果:</h2>' + data;
+    });
+
+    socket.on('update_result2', function(data) {
+        // 更新算法执行结果的显示
+        document.getElementById('result2').style.display = 'block';
+        document.getElementById('result2').innerHTML = '<h2>算法执行结果:</h2>' + data;
+    });
+
+    socket.on('update_result3', function(data) {
+        // 更新数据分析结果的显示
+        document.getElementById('result3').style.display = 'block';
+        document.getElementById('result3').innerHTML = '<h2>数据分析结果:</h2>' + data;
+    });
+</script>
+
+</head>
+<body>
+    <div class="container">
+        <h1>黄羽肉鸡活体性状智能测定系统</h1>
+        <form method="POST">
+            <fieldset>
+                <legend>3D转换</legend>
+                <label for="input_field_name">输入路径:</label>
+                <input type="text" id="input_field_name" name="input_field_name" placeholder="Enter Path">
+                <button type="submit" name="转换" value="转换" class="btn"><i class="fas fa-exchange-alt"></i>转换</button>
+            </fieldset>
+        </form>
+
+        <form method="POST">
+            <fieldset>
+                <legend>算法执行</legend>
+                <label for="UNet3D">算法名称:</label>
+                <input type="text" id="UNet3D" name="UNet3D" value="睾丸分割模型" readonly>
+                <button type="submit" name="算法执行" value="算法执行" class="btn"><i class="fas fa-play"></i>算法执行</button>
+            </fieldset>
+        </form>
+
+        <form method="POST">
+            <fieldset>
+                <legend>数据分析</legend>
+                <label for="运算处理">数据处理:</label>
+                <input type="text" id="运算处理" name="运算处理" value="运算处理" readonly>
+                <button type="submit" name="数据分析" value="数据分析" class="btn"><i class="fas fa-chart-bar"></i>数据分析</button>
+            </fieldset>
+        </form>
+    </div>
+
+        <!-- 结果展示部分 -->
+        <div class="container">
+            
+            <div id="result1" style="display: {{ 'block' if result1 else 'none' }};">
+                <h2>转换结果:</h2>
+                {{ result1 }}
+            </div>
+        
+            <div id="result2" style="display: {{ 'block' if result2 else 'none' }};">
+                <h2>算法执行结果:</h2>
+                {{ result2 }}
+            </div>
+        
+            <div id="result3" style="display: {{ 'block' if result3 else 'none' }};">
+                <h2>数据分析结果:</h2>
+                {{ result3 }}
+            </div>
+        </div>
+
+        
+</body>
+</html>
+
+
